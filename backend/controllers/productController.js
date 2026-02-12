@@ -1,9 +1,11 @@
 import Product from "../models/Product.js";
+import cloudinary from "../config/cloudinary.js";
 
+/**
+ * GET ALL PRODUCTS / FILTER BY CATEGORY
+ */
 export const getProducts = async (req, res) => {
   try {
-    console.log("QUERY PARAM:", req.query.category);
-
     const category = req.query.category;
 
     let products;
@@ -16,47 +18,41 @@ export const getProducts = async (req, res) => {
       products = await Product.find();
     }
 
-    console.log("PRODUCTS COUNT:", products.length);
-
     res.json(products);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
 
-export const addProduct = async (req, res) => {
+/**
+ * CREATE PRODUCT (WITH CLOUDINARY IMAGE)
+ */
+export const createProduct = async (req, res) => {
   try {
-    const product = await Product.create(req.body);
-    res.status(201).json(product);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
+    const { name, price, description, category, countInStock } = req.body;
 
-export const createOrder = async (req, res) => {
-  try {
-    console.log("USER IN ORDER:", req.user); // 🔍 DEBUG
-
-    if (!req.user) {
-      return res.status(401).json({ message: "Not authorized" });
+    // ✅ Image validation
+    if (!req.file) {
+      return res.status(400).json({ message: "Product image is required" });
     }
 
-    const { orderItems, shippingAddress, totalPrice } = req.body;
-
-    if (!orderItems || orderItems.length === 0) {
-      return res.status(400).json({ message: "No order items" });
-    }
-
-    const order = await Order.create({
-      user: req.user._id,
-      orderItems,
-      shippingAddress,
-      totalPrice,
+    // 🔥 Upload image to Cloudinary
+    const result = await cloudinary.uploader.upload(req.file.path, {
+      folder: "stylecart/products",
     });
 
-    res.status(201).json(order);
+    const product = await Product.create({
+      name,
+      price,
+      description,
+      category,
+      countInStock,
+      image: result.secure_url, // ✅ Cloudinary URL
+    });
+
+    res.status(201).json(product);
   } catch (error) {
-    console.error("ORDER ERROR:", error);
+    console.error("CREATE PRODUCT ERROR:", error);
     res.status(500).json({ message: error.message });
   }
 };
