@@ -117,7 +117,7 @@ function Products() {
             {/* IMAGE */}
             <div className="relative overflow-hidden">
               <img
-                src={`${import.meta.env.VITE_BACKEND_URL}/${product.image}`} 
+                src={product.image} 
                 alt={product.name}
                 className="w-full h-64 object-cover"
               />

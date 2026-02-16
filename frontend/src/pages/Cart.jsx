@@ -70,7 +70,7 @@ function Cart() {
                 >
                   {/* IMAGE */}
                   <img
-                    src={`${import.meta.env.VITE_BACKEND_URL}/${item.image}`}
+                    src={item.image}
                     alt={item.name}
                     className="w-24 h-28 object-cover"
                   />

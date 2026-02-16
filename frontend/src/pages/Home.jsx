@@ -268,7 +268,7 @@ function Home() {
                             {/* Image */}
                             <div className="overflow-hidden bg-gray-100">
                                 <img
-                                    src={`${import.meta.env.VITE_BACKEND_URL}/${product.image}`}
+                                    src={product.image}
                                     alt={product.name}
                                     className="w-full h-64 object-cover group-hover:scale-105 transition duration-500"
                                 />
@@ -318,7 +318,7 @@ function Home() {
                                 {/* Image */}
                                 <div className="overflow-hidden bg-gray-100">
                                     <img
-                                        src={`${import.meta.env.VITE_BACKEND_URL}/${product.image}`}
+                                        src={product.image}
                                         alt={product.name}
                                         className="w-full h-64 object-cover group-hover:scale-105 transition duration-500"
                                     />
