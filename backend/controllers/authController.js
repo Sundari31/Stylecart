@@ -11,7 +11,7 @@ const generateToken = (id) => {
 // REGISTER
 export const registerUser = async (req, res) => {
   try {
-    const { name, email, password } = req.body;
+    const { name, email, password, isAdmin } = req.body;
 
     const userExists = await User.findOne({ email });
     if (userExists) {
@@ -22,12 +22,14 @@ export const registerUser = async (req, res) => {
       name,
       email,
       password,
+      isAdmin: isAdmin || false,
     });
 
     res.status(201).json({
       _id: user._id,
       name: user.name,
       email: user.email,
+      isAdmin: user.isAdmin,
       token: generateToken(user._id),
     });
   } catch (error) {
